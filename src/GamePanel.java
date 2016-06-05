@@ -14,6 +14,9 @@ public class GamePanel extends JPanel implements Runnable {
     private BufferedImage image;
     private Graphics2D g;
 
+    private int FPS = 30;
+    private double averageFPS;
+
     // CONSTRUCTOR
     public GamePanel() {
         super();
@@ -37,8 +40,18 @@ public class GamePanel extends JPanel implements Runnable {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
 
+        long startTime;
+        long URDTimeMillis;
+        long waitTime;
+        long totalTime;
+
+        int frameCount;
+        int maxFrameCount = 30;
+
         //  GAME LOOP
         while (running) {
+
+            startTime = System.nanoTime();
 
             gameUpdate();
             gameRender();
