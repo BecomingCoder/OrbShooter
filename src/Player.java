@@ -16,6 +16,10 @@ public class Player {
     private boolean up;
     private boolean down;
 
+    private boolean firing;
+    private long firingTimer;
+    private long firingDelay;
+
     private int lives;
     private Color color1;
     private Color color2;
@@ -34,6 +38,10 @@ public class Player {
         lives = 3;
         color1 = Color.WHITE;
         color2 = Color.RED;
+
+        firing = false;
+        firingTimer = System.nanoTime();
+        firingDelay = 200;
     }
 
     //FUNCTIONS
@@ -49,6 +57,9 @@ public class Player {
     }
     public void setDown(boolean b) {
         down = b;
+    }
+    public void setFiring(boolean b) {
+        firing = b;
     }
 
 
@@ -77,6 +88,14 @@ public class Player {
 
         dx = 0;
         dy = 0;
+
+        if (firing) {
+            long elapsed = (System.nanoTime() - firingTimer) / 1000000;
+            if (elapsed > firingDelay) {
+                GamePanel.bullets.add(new Bullet(270, x, y));
+                firingTimer = System.nanoTime();
+            }
+        }
 
     }
 
