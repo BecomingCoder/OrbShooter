@@ -7,8 +7,8 @@ import java.util.*;
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     // FIELDS
-    public static int WIDTH = 400;
-    public static int HEIGHT = 400;
+    public static int WIDTH = 600;
+    public static int HEIGHT = 600;
 
     private Thread thread;
     private boolean running;
@@ -18,6 +18,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     private int FPS = 30;
     private double averageFPS;
+    private boolean paused = false;
 
     public static Player player;
     public static ArrayList<Bullet> bullets;
@@ -134,6 +135,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     private void gameUpdate() {
+    	
+    	if(paused)
+    		return;
 
         // new wave
         if(waveStartTimer == 0 && enemies.size() == 0) {
@@ -341,6 +345,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     private void gameRender() {
+    	
+    	if(paused) {
+            g.setColor(new Color(0, 100, 255));
+            g.fillRect(0, 0, WIDTH, HEIGHT);
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+            String p = "P A U S E D";
+            int length = (int) g.getFontMetrics().getStringBounds(p, g).getWidth();
+            g.drawString(p, (WIDTH - length) / 2, HEIGHT / 2);
+    		
+    		return;
+    	}
 
         // draw background
         g.setColor(new Color(0, 100, 255));
@@ -433,64 +449,118 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         g2.dispose();
     }
 
+    
     private void createNewEnemies() {
 
-        enemies.clear();
-        Enemy e;
+    	enemies.clear();
+    	Enemy e;
+    	int enemyCount = 3;
+    	int maxType = 02;
+    	int maxRank = 2;
+    	int type = 2;
+    	int rank = 2;
 
-        if(waveNumber == 1) {
-            for(int i = 0; i < 4; i++) {
-                enemies.add(new Enemy(1, 1));
-            }
-        }
-        if(waveNumber == 2) {
-            for(int i = 0; i < 8; i++) {
-                enemies.add(new Enemy(1, 1));
-            }
-        }
-        if(waveNumber == 3) {
-            for(int i = 0; i < 4; i++) {
-                enemies.add(new Enemy(1, 1));
-            }
-            enemies.add(new Enemy(1, 2));
-            enemies.add(new Enemy(1, 2));
-        }
-        if(waveNumber == 4) {
-            enemies.add(new Enemy(1, 3));
-            enemies.add(new Enemy(1, 4));
-            for(int i = 0; i < 4; i++) {
-                enemies.add(new Enemy(2, 1));
-            }
-        }
-        if(waveNumber == 5) {
-            enemies.add(new Enemy(1, 4));
-            enemies.add(new Enemy(1, 3));
-            enemies.add(new Enemy(2, 3));
-        }
-        if(waveNumber == 6) {
-            enemies.add(new Enemy(1, 3));
-            for(int i = 0; i < 4; i++) {
-                enemies.add(new Enemy(2, 1));
-                enemies.add(new Enemy(3, 1));
-            }
-        }
-        if(waveNumber == 7) {
-            enemies.add(new Enemy(1, 3));
-            enemies.add(new Enemy(2, 3));
-            enemies.add(new Enemy(3, 3));
-        }
-        if(waveNumber == 8) {
-            enemies.add(new Enemy(1, 4));
-            enemies.add(new Enemy(2, 4));
-            enemies.add(new Enemy(3, 4));
-        }
-        if(waveNumber == 9) {
-            running = false;
-        }
+    	if(waveNumber < 10){
+    		enemyCount = waveNumber * 3;
+    		maxType = 2;
+    		maxRank = 2;
+    	} else if (waveNumber <20){
+    		enemyCount = waveNumber * 6;
+    		maxType = 3;
+    		maxRank = 3;
+    	} else if (waveNumber <30){
+    		enemyCount = waveNumber * 9;
+    		maxType = 3;
+    		maxRank = 4;
+    	} else {
+    		enemyCount = waveNumber * 18;
+    		maxType = 3;
+    		maxRank = 4;
+    	}
+
+    	boolean canSpawn = true;
+    	while(canSpawn){
+
+
+    		if(enemyCount >= 0 ){
+    			for (int i = 0; i < maxType; i++){
+    				type = 1 + i;
+    				rank = 1 + (int)(Math.random()*maxRank);
+    				int cost = type * rank * 2;
+    				if(enemyCount - cost >= -4 && cost != 0){
+    					enemyCount = enemyCount - cost;
+    					enemies.add(new Enemy(type, rank));
+    				}
+    			}
+
+
+    		}else{
+    			canSpawn = false;
+    		}
+    	}
+    }
+    
+//    private void createNewEnemies() {
+//
+//        enemies.clear();
+//        Enemy e;
+//
+//        if(waveNumber == 1) {
+//            for(int i = 0; i < 4; i++) {
+//                enemies.add(new Enemy(1, 1));
+//            }
+//        }
+//        if(waveNumber == 2) {
+//            for(int i = 0; i < 8; i++) {
+//                enemies.add(new Enemy(1, 1));
+//            }
+//        }
+//        if(waveNumber == 3) {
+//            for(int i = 0; i < 4; i++) {
+//                enemies.add(new Enemy(1, 1));
+//            }
+//            enemies.add(new Enemy(1, 2));
+//            enemies.add(new Enemy(1, 2));
+//        }
+//        if(waveNumber == 4) {
+//            enemies.add(new Enemy(1, 3));
+//            enemies.add(new Enemy(1, 4));
+//            for(int i = 0; i < 4; i++) {
+//                enemies.add(new Enemy(2, 1));
+//            }
+//        }
+//        if(waveNumber == 5) {
+//            enemies.add(new Enemy(1, 4));
+//            enemies.add(new Enemy(1, 3));
+//            enemies.add(new Enemy(2, 3));
+//        }
+//        if(waveNumber == 6) {
+//            enemies.add(new Enemy(1, 3));
+//            for(int i = 0; i < 4; i++) {
+//                enemies.add(new Enemy(2, 1));
+//                enemies.add(new Enemy(3, 1));
+//            }
+//        }
+//        if(waveNumber == 7) {
+//            enemies.add(new Enemy(1, 3));
+//            enemies.add(new Enemy(2, 3));
+//            enemies.add(new Enemy(3, 3));
+//        }
+//        if(waveNumber == 8) {
+//            enemies.add(new Enemy(1, 4));
+//            enemies.add(new Enemy(2, 4));
+//            enemies.add(new Enemy(3, 4));
+//        }
+//        if(waveNumber == 9) {
+//            running = false;
+//        }
+//
+//    }
+
+    public void keyTyped(KeyEvent key) {
+    	
 
     }
-
-    public void keyTyped(KeyEvent key) {}
     public void keyPressed(KeyEvent key) {
         int keyCode = key.getKeyCode();
         if(keyCode == KeyEvent.VK_LEFT) {
@@ -505,8 +575,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         if(keyCode == KeyEvent.VK_DOWN) {
             player.setDown(true);
         }
-        if(keyCode == KeyEvent.VK_Z) {
+        if(keyCode == KeyEvent.VK_SPACE) {
             player.setFiring(true);
+        }
+    	if(keyCode == KeyEvent.VK_P) {
+        	paused = true;
+        }
+    	if(keyCode == KeyEvent.VK_U) {
+        	paused = false;
         }
     }
     public void keyReleased(KeyEvent key) {
@@ -523,8 +599,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         if(keyCode == KeyEvent.VK_DOWN) {
             player.setDown(false);
         }
-        if(keyCode == KeyEvent.VK_Z) {
+        if(keyCode == KeyEvent.VK_SPACE) {
             player.setFiring(false);
+        }
+    	if(keyCode == KeyEvent.VK_P) {
+        	paused = true;
+        }
+    	if(keyCode == KeyEvent.VK_U) {
+        	paused = false;
         }
     }
 

@@ -27,6 +27,8 @@ public class Enemy {
     private boolean slow;
 
     // CONSTRUCTOR
+    
+    
     public Enemy(int type, int rank) {
 
         this.type = type;

@@ -107,9 +107,14 @@ public class Player {
         }
     }
 
-    public int getPowerLevel() { return powerLevel; }
-    public int getPower() { return power; }
-    public int getRequiredPower() { return requiredPower[powerLevel]; }
+    public int getPowerLevel() {
+    	return powerLevel; }
+    
+    public int getPower() {
+    	return power; }
+    
+    public int getRequiredPower() {
+    	return requiredPower[powerLevel]; }
 
     public void update() {
 
