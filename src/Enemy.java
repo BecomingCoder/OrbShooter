@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Enemy {
+class Enemy {
 
     // FIELDS
     private double x;
@@ -29,7 +29,7 @@ public class Enemy {
     // CONSTRUCTOR
     
     
-    public Enemy(int type, int rank) {
+    Enemy(int type, int rank) {
 
         this.type = type;
         this.rank = rank;
@@ -128,18 +128,18 @@ public class Enemy {
     }
 
     // FUNCTIONS
-    public double getx() { return x; }
-    public double gety() { return y; }
-    public int getr() { return r; }
+    double getx() { return x; }
+    double gety() { return y; }
+    int getr() { return r; }
 
-    public int getType() { return type; }
-    public int getRank() { return rank; }
+    int getType() { return type; }
+    int getRank() { return rank; }
 
-    public void setSlow(boolean b) { slow = b; }
+    void setSlow(boolean b) { slow = b; }
 
-    public boolean isDead() { return dead; }
+    boolean isDead() { return dead; }
 
-    public void hit() {
+    void hit() {
         health--;
         if(health <= 0) {
             dead = true;
@@ -148,7 +148,7 @@ public class Enemy {
         hitTimer = System.nanoTime();
     }
 
-    public void explode() {
+    void explode() {
 
         if(rank > 1) {
 
@@ -186,7 +186,7 @@ public class Enemy {
 
     }
 
-    public void update() {
+    void update() {
 
         if(slow) {
             x += dx * 0.3;
@@ -219,7 +219,7 @@ public class Enemy {
 
     }
 
-    public void draw(Graphics2D g) {
+    void draw(Graphics2D g) {
 
         if(hit) {
             g.setColor(Color.WHITE);
